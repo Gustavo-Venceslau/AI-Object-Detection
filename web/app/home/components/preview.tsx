@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas } from 'fabric';
+import axios from "axios";
 
 export function Preview() {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
