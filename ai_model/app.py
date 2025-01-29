@@ -5,9 +5,11 @@ import onnxruntime as ort
 from typing import List
 from dataclasses import dataclass
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from smart_open import open
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 @dataclass
 class BBOX:

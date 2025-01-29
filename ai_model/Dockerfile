@@ -13,7 +13,7 @@ COPY requirements.txt .
 # Install the required dependencies
 RUN pip install --upgrade pip && \
     grep -v -e opencv requirements.txt | pip install --no-cache-dir -r /dev/stdin && \
-    pip install  --no-cache-dir onnxruntime-gpu==1.14.0 && \
+    pip install  --no-cache-dir onnxruntime && \
     pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code to the working directory
