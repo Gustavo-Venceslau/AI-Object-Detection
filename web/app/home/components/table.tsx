@@ -7,7 +7,7 @@ import {
 	TableRow,
 } from "@/components/ui/table"
 
-const example = [
+export const example = [
 	{
 	  "box": {"height": 503, "left": 50, "top": 400, "width": 195},
 	  "class_name": "person",

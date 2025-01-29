@@ -1,6 +1,6 @@
 "use client"
 
-import { TextBox } from "../utils/textBox";
+import { TextBox } from "../../utils/textBox";
 
 export function SettingsBar() {
 	return (
