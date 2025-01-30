@@ -5,7 +5,7 @@ import busVideo from '/videos/video.mp4';
 import { SettingsBar } from './home/components/settingsBar';
 import { ResultsTable } from './home/components/table';
 import { Preview } from './home/components/preview';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useCanva } from '@/contexts/canva'
 import axios from 'axios';
 
@@ -14,9 +14,23 @@ const style = {
 	overflow: 'hidden'
 }
 
+type Box = {
+	height: number, 
+	left: number, 
+	top: number, 
+	width: number
+}
+
+type Prediction = {
+	box: Box,
+	class_name: string,
+	confidence: number
+}
+
 export default function Home() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 	const { canvas, canvasRef } = useCanva();
+	const [name, setName] = useState("vazio");
 
 	const extractFrames = () => {
 		if(videoRef.current && canvas) {
@@ -26,6 +40,8 @@ export default function Home() {
 				const offscreenCanvas = document.createElement('canvas');
 				offscreenCanvas.width = 800;
     			offscreenCanvas.height = 450;
+
+				console.log(`w:${video.width}, h:${video.height}`)
 
 				if(canvasRef.current) {
 					const ctx = offscreenCanvas.getContext('2d');
@@ -37,13 +53,34 @@ export default function Home() {
 
 						const response = await axios.post("http://localhost:5001/detect", {
 							image_data_url: imageDataUrl,
-							confidence: 0,
-							iou: 0,
+							confidence: 0.7,
+							iou: 0.5,
 						})
 
 						if(response.status !== 200) { throw new Error("Erro ao gerar predições"); }
 
-						console.log(response.data);
+						const predictions: Prediction[] = response.data
+
+						const contexto = canvasRef.current!.getContext('2d');
+
+						predictions.map(prediction => {
+							const { top, left, width, height } = prediction.box
+
+							contexto!.clearRect(0, 0, canvas.width, canvas.height);
+
+							const x = (800 - width) / 2
+							const y = (450 - height) / 2
+
+							setName(`${prediction.class_name},${top},${left},${width},${height} /n confidence${prediction.confidence}`)
+
+							contexto!.drawImage(
+								video, 
+								left, top, // pega a parte da imagem a ser mostrada
+								video.width, video.height, // tamanho do recorte da imagem
+								x, y, // posição da imagem no canvas
+								width, height // tamanho final da imagem
+							)
+						})
 					}
 
 					if (video.currentTime < video.duration) {
@@ -60,18 +97,19 @@ export default function Home() {
 	}
 
 	return (
-	<div className="w-full h-screen text-center flex flex-col items-center gap-16 py-16">
-		<h1 className='text-white text-4xl font-bold'>
-			Welcome to AI Object Detection
-		</h1>
-		<div className='w-[800px] flex flex-col gap-4 shadow-lg'>
-			<button type='button' className='text-white' onClick={extractFrames}>click</button>
-			<Preview />
-			<Video src={busVideo} width={800} height={450} style={style} ref={videoRef} />
-			<h2 className='text-white text-2xl font-semibold'>Settings</h2>
-			<SettingsBar />
-			<ResultsTable />
+		<div className="w-full h-screen text-center flex flex-col items-center gap-16 py-16">
+			<h1 className='text-white text-4xl font-bold'>
+				Welcome to AI Object Detection
+			</h1>
+			<div className='w-[800px] flex flex-col gap-4 shadow-lg'>
+				<button type='button' className='text-white' onClick={extractFrames}>click</button>
+				<Preview />
+				<h1 className='text-white text-xl'>{name}</h1>
+				<Video src={busVideo} width={800} height={450} style={style} ref={videoRef} />
+				<h2 className='text-white text-2xl font-semibold'>Settings</h2>
+				<SettingsBar />
+				<ResultsTable />
+			</div>
 		</div>
-	</div>
 	);
 }

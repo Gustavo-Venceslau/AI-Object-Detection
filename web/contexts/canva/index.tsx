@@ -18,10 +18,9 @@ export const CanvaProvider = ({ children }: { children: React.ReactNode }) => {
 		if (canvasRef.current) {
 			const initCanvas = new Canvas(canvasRef.current, {
 				width: 800,
-				height: 200
+				height: 450
 			});
 
-			initCanvas.backgroundColor = "#fff"
 			initCanvas.renderAll();
 
 			setCanvas(initCanvas);
