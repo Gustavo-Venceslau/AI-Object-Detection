@@ -9,6 +9,7 @@ from flask_cors import CORS
 from smart_open import open
 import os
 import base64
+import time
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -128,7 +129,7 @@ def detect():
 		confidence = request.json["confidence"]
 		iou = request.json["iou"]
 
-		if not image_data_url | confidence | iou:
+		if not image_data_url:
 			return jsonify({"error": "no correct data provided"}), 400
 
 		base64_data = image_data_url.split(",")[1]
@@ -143,8 +144,11 @@ def detect():
 		predictions = model(original_img, confidence, iou)
 		detections = [p.to_dict() for p in predictions]
 
-		return jsonify(detections)
+		os.remove(image_path)
+
+		return jsonify(detections), 200
 	except Exception as e:
+		print(e)
 		return jsonify({"error": str(e)}), 500
 
 @app.route('/health_check', methods=['GET'])
@@ -161,4 +165,4 @@ def load_model():
     return f"Model {model_name} is loaded"
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5001)

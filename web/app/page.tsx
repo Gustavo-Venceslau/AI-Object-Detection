@@ -7,6 +7,7 @@ import { ResultsTable } from './home/components/table';
 import { Preview } from './home/components/preview';
 import { useRef } from 'react';
 import { useCanva } from '@/contexts/canva'
+import axios from 'axios';
 
 const style = {
 	borderRadius: '12px',
@@ -21,7 +22,7 @@ export default function Home() {
 		if(videoRef.current && canvas) {
 			const video = videoRef.current;
 
-			video.onseeked = () => {
+			video.onseeked = async () => {
 				const offscreenCanvas = document.createElement('canvas');
 				offscreenCanvas.width = 800;
     			offscreenCanvas.height = 450;
@@ -34,12 +35,15 @@ export default function Home() {
 
 						const imageDataUrl = offscreenCanvas.toDataURL('image/jpeg')
 
-						const link = document.createElement("a");
-						link.href = imageDataUrl;
-						link.download = "frame.png";
-						link.click();
+						const response = await axios.post("http://localhost:5001/detect", {
+							image_data_url: imageDataUrl,
+							confidence: 0,
+							iou: 0,
+						})
 
-						console.log(imageDataUrl);
+						if(response.status !== 200) { throw new Error("Erro ao gerar predições"); }
+
+						console.log(response.data);
 					}
 
 					if (video.currentTime < video.duration) {
