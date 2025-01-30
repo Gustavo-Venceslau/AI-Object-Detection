@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from smart_open import open
+import os
+import base64
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -116,18 +118,34 @@ class Model:
 
 
 model = Model("yolov8s")
+SAVE_DIR = "frames"
+os.makedirs(SAVE_DIR, exist_ok=True)
 
 @app.route('/detect', methods=['POST'])
 def detect():
-    image_path = request.json['image_path']
-    confidence = request.json['confidence']
-    iou = request.json['iou']
-    with open(image_path, 'rb') as f:
-        original_img = Image.open(f).convert('RGB')
-    predictions = model(original_img, confidence, iou)
-    detections = [p.to_dict() for p in predictions]
+	try:
+		image_data_url = request.json["image_data_url"]
+		confidence = request.json["confidence"]
+		iou = request.json["iou"]
 
-    return jsonify(detections)
+		if not image_data_url | confidence | iou:
+			return jsonify({"error": "no correct data provided"}), 400
+
+		base64_data = image_data_url.split(",")[1]
+		image_path = os.path.join(SAVE_DIR, f"frame_{int(time.time())}.png")
+
+		with open(image_path, "wb") as f:
+			f.write(base64.b64decode(base64_data))
+
+		with open(image_path, "rb") as f:
+			original_img = Image.open(f).convert("RGB")
+
+		predictions = model(original_img, confidence, iou)
+		detections = [p.to_dict() for p in predictions]
+
+		return jsonify(detections)
+	except Exception as e:
+		return jsonify({"error": str(e)}), 500
 
 @app.route('/health_check', methods=['GET'])
 def health_check():
@@ -141,26 +159,6 @@ def load_model():
     global model
     model = Model(model_name)
     return f"Model {model_name} is loaded"
-
-SAVE_DIR = "frames"
-os.makedirs(SAVE_DIR, exist_ok=True)
-
-@app.route("/save-frame", methods=["POST"])
-def save_frame():
-    try:
-        data = request.json.get("imageData")
-        if not data:
-            return jsonify({"error": "No image data provided"}), 400
-			
-        base64_data = data.split(",")[1]
-        image_path = os.path.join(SAVE_DIR, f"frame_{int(time.time())}.png")
-
-        with open(image_path, "wb") as f:
-            f.write(base64.b64decode(base64_data))
-
-        return jsonify({"message": f"File saved at {image_path}"})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
