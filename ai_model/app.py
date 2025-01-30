@@ -142,5 +142,25 @@ def load_model():
     model = Model(model_name)
     return f"Model {model_name} is loaded"
 
+SAVE_DIR = "frames"
+os.makedirs(SAVE_DIR, exist_ok=True)
+
+@app.route("/save-frame", methods=["POST"])
+def save_frame():
+    try:
+        data = request.json.get("imageData")
+        if not data:
+            return jsonify({"error": "No image data provided"}), 400
+			
+        base64_data = data.split(",")[1]
+        image_path = os.path.join(SAVE_DIR, f"frame_{int(time.time())}.png")
+
+        with open(image_path, "wb") as f:
+            f.write(base64.b64decode(base64_data))
+
+        return jsonify({"message": f"File saved at {image_path}"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

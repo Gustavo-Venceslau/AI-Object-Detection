@@ -1,28 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { Canvas } from 'fabric';
-import axios from "axios";
+import { useCanva } from "@/contexts/canva";
 
 export function Preview() {
-	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  	const [canvas, setCanvas] = useState<Canvas | null>(null);
-
-	useEffect(() => {
-		if (canvasRef.current) {
-			const initCanvas = new Canvas(canvasRef.current, {
-				width: 800,
-				height: 200
-			});
-
-			initCanvas.backgroundColor = "#fff"
-			initCanvas.renderAll();
-
-			setCanvas(initCanvas);
-
-			return () => {
-				initCanvas.dispose();
-			};
-		}
-	}, []);
+	const { canvasRef } = useCanva();
 
 	// const addImage = () => {
 	// 	if(canvas) {
