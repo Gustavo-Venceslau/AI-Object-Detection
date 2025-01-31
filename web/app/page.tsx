@@ -1,13 +1,12 @@
 "use client"
 
-import Video from 'next-video';
-import busVideo from '/videos/video.mp4';
 import { SettingsBar } from './home/components/settingsBar';
 import { ResultsTable } from './home/components/table';
 import { Preview } from './home/components/preview';
 import { useRef, useState } from 'react';
 import { useCanva } from '@/contexts/canva'
 import axios from 'axios';
+import { Video } from './home/components/video';
 
 type Box = {
 	height: number, 
@@ -66,7 +65,7 @@ export default function Home() {
 							const x = (800 - width) / 2
 							const y = (450 - height) / 2
 
-							setName(`predições: ${prediction.class_name},${top},${left},${width},${height} /n confidence${prediction.confidence}`)
+							setName(`class_name:${prediction.class_name} top:${top} left:${left} width:${width} height:${height} confidence:${prediction.confidence}`)
 
 							contexto!.drawImage(
 								video, 
@@ -101,10 +100,10 @@ export default function Home() {
 				<div className='flex flex-flex gap-4'>
 					<section className='w-full'>
 						<Video 
-							src={busVideo} 
-							width={800} 
-							height={450} 
-							ref={videoRef} 
+							width={800}
+							height={450}
+							src="video.mp4"
+							ref={videoRef}
 							className='rounded-t-lg rounded-tr-lg overflow-hidden'
 						/>
 						<SettingsBar detectFunction={extractFrames}/>

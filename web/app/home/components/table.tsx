@@ -29,7 +29,7 @@ export function ResultsTable() {
 
 
 	return (
-		<Table className="w-[600px] mx-auto rounded-lg overflow-hidden">
+		<Table className="w-full mx-auto rounded-lg overflow-hidden">
 				<TableHeader className="">
 					<TableRow className="bg-[#2A2A2A]">
 						<TableHead className="text-white text-center font-semibold">Number</TableHead>
