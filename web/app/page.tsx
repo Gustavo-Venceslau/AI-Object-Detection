@@ -32,7 +32,7 @@ export default function Home() {
 	const { canvas, canvasRef } = useCanva();
 	const [name, setName] = useState("vazio");
 
-	const extractFrames = () => {
+	const extractFrames = (confidence: number, iou: number) => {
 		if(videoRef.current && canvas) {
 			const video = videoRef.current;
 
@@ -53,8 +53,8 @@ export default function Home() {
 
 						const response = await axios.post("http://localhost:5001/detect", {
 							image_data_url: imageDataUrl,
-							confidence: 0.7,
-							iou: 0.5,
+							confidence,
+							iou
 						})
 
 						if(response.status !== 200) { throw new Error("Erro ao gerar predições"); }
@@ -102,12 +102,11 @@ export default function Home() {
 				Welcome to AI Object Detection
 			</h1>
 			<div className='w-[800px] flex flex-col gap-4 shadow-lg'>
-				<button type='button' className='text-white' onClick={extractFrames}>click</button>
 				<Preview />
 				<h1 className='text-white text-xl'>{name}</h1>
 				<Video src={busVideo} width={800} height={450} style={style} ref={videoRef} />
 				<h2 className='text-white text-2xl font-semibold'>Settings</h2>
-				<SettingsBar />
+				<SettingsBar detectFunction={extractFrames}/>
 				<ResultsTable />
 			</div>
 		</div>
