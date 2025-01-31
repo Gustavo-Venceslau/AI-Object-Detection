@@ -1,3 +1,4 @@
+import { Prediction } from "@/app/page"
 import {
 	Table,
 	TableBody,
@@ -6,31 +7,27 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table"
-
-export const example = [
-	{
-	  "box": {"height": 503, "left": 50, "top": 400, "width": 195},
-	  "class_name": "person",
-	  "confidence": 0.9132577180862427
-	},
-	{
-	  "box": {"height": 489, "left": 668, "top": 391, "width": 140},
-	  "class_name": "person",
-	  "confidence": 0.9127665758132935
-	},
-	{
-	  "box": {"height": 515,  "left": 3, "top": 228,  "width": 805},
-	  "class_name": "bus",
-	  "confidence": 0.9017127752304077
-	},
-	{
-	  "box": {"height": 452, "left": 223,  "top": 407, "width": 121},
-	  "class_name": "person",
-	  "confidence": 0.8749434351921082
-	}
-]
+import axios from "axios"
+import { useEffect, useState } from "react"
 
 export function ResultsTable() {
+	const [predictions, setPredictions] = useState<Prediction[]>([])
+
+	useEffect(() => {
+		axios.get("http://localhost:5001/list_predictions")
+			.then((response) => {
+				if(response.status !== 200) {
+					throw new Error("Erro ao listar predições")
+				}
+
+				setPredictions(response.data)
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	}, [])
+
+
 	return (
 		<Table className="my-10">
 				<TableHeader className="">
@@ -42,7 +39,7 @@ export function ResultsTable() {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{example.map((row, index) => (
+					{predictions.map((row, index) => (
 						<TableRow key={index}>
 							<TableCell className="font-medium text-white text-center">{index + 1}</TableCell>
 							<TableCell className="font-medium text-white text-center">{`${JSON.stringify(row.box)}`}</TableCell>

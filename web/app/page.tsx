@@ -21,7 +21,7 @@ type Box = {
 	width: number
 }
 
-type Prediction = {
+export type Prediction = {
 	box: Box,
 	class_name: string,
 	confidence: number

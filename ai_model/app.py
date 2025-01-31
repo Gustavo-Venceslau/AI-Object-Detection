@@ -1,43 +1,19 @@
 import numpy as np
 import cv2
-from PIL import Image
-import onnxruntime as ort
-from typing import List
-from dataclasses import dataclass
-from flask import Flask, request, jsonify
-from flask_cors import CORS
-from smart_open import open
 import os
 import base64
 import time
+import onnxruntime as ort
+from PIL import Image
+from typing import List
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from smart_open import open
+from entities.Prediction import Prediction, BBOX
+from infra.repositories.predictions_repository import PredictionsRepository
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
-@dataclass
-class BBOX:
-    left: int
-    top: int
-    width: int
-    height: int
-
-@dataclass
-class Prediction:
-    class_name: int
-    confidence: float
-    box: BBOX
-    
-    def to_dict(self):
-        return {
-            "class_name": str(self.class_name),
-            "confidence": float(self.confidence),
-            "box": {
-                "left": int(self.box.left),
-                "top": int(self.box.top),
-                "width": int(self.box.width),
-                "height": int(self.box.height)
-            }
-        }
 
 class Model:
     def __init__(self, model_name: str):
@@ -144,6 +120,9 @@ def detect():
 		predictions = model(original_img, confidence, iou)
 		detections = [p.to_dict() for p in predictions]
 
+		for p in predictions:
+			PredictionsRepository.save(p)
+
 		os.remove(image_path)
 
 		return jsonify(detections), 200
@@ -163,6 +142,15 @@ def load_model():
     global model
     model = Model(model_name)
     return f"Model {model_name} is loaded"
+
+@app.route('/list_predictions', methods=['GET'])
+def list_predictions():
+	try:
+		predictions = PredictionsRepository.getLast10Predictions()
+		return jsonify([p.to_dict() for p in predictions]), 200
+	except Exception as e:
+		print(e)
+		return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5001)
