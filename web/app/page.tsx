@@ -93,9 +93,9 @@ export default function Home() {
 
 	return (
 		<div className="w-full h-screen text-center flex flex-col items-center">
-			<h1 className='text-white text-4xl font-bold my-10'>
-				Welcome to AI Object Detection
-			</h1>
+			<div className='w-full h-10 bg-[#2A2A2A] mb-10 flex items-center justify-center'>
+				<h1 className='text-white text-xl font-bold'>AI Object Detection</h1>
+			</div>
 			<div className='flex flex-col gap-4 shadow-lg'>
 				<Preview predictionName={name}/>
 				<div className='flex flex-flex gap-4'>

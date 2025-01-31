@@ -24,7 +24,7 @@ export function SettingsBar({ detectFunction }: SettingsBarProps) {
 	}
 
 	return (
-		<div className="bg-[#2A2A2A] w-full p-6 flex justify-between rounded-b-lg rounded-br-lg">
+		<div className="bg-[#2A2A2A] w-full px-6 py-4 flex justify-between rounded-b-lg rounded-br-lg">
 			<div className="flex gap-4 items-center">
 				<TextBox name="Confidence" placeholder="Confidence" onChange={handleConfidenceChange}/>
 				<TextBox name="IoU" placeholder="IoU" onChange={handleIoUChange}/>
