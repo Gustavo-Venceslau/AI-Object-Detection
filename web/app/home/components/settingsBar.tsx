@@ -24,13 +24,13 @@ export function SettingsBar({ detectFunction }: SettingsBarProps) {
 	}
 
 	return (
-		<div className="bg-white w-full p-6 rounded-full flex justify-between">
+		<div className="bg-[#2A2A2A] w-full p-6 flex justify-between rounded-b-lg rounded-br-lg">
 			<div className="flex gap-4 items-center">
 				<TextBox name="Confidence" placeholder="Confidence" onChange={handleConfidenceChange}/>
 				<TextBox name="IoU" placeholder="IoU" onChange={handleIoUChange}/>
 			</div>
 			<button 
-				className="bg-foreground text-white px-8 py-4 rounded-full shadow-lg font-semibold" 
+				className="bg-foreground text-white px-8 py-4 rounded-xl shadow-lg font-semibold" 
 				type="button"
 				onClick={() => detectFunction(confidence, iou)}
 			>

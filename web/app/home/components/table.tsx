@@ -29,13 +29,13 @@ export function ResultsTable() {
 
 
 	return (
-		<Table className="my-10">
+		<Table className="w-[600px] mx-auto rounded-lg overflow-hidden">
 				<TableHeader className="">
 					<TableRow className="bg-[#2A2A2A]">
-						<TableHead className="text-white text-center">Number</TableHead>
-						<TableHead className="text-white text-center">Box</TableHead>
-						<TableHead className="text-white text-center">ClassName</TableHead>
-						<TableHead className="text-center text-white">Confidence</TableHead>
+						<TableHead className="text-white text-center font-semibold">Number</TableHead>
+						<TableHead className="text-white text-center font-semibold">Box</TableHead>
+						<TableHead className="text-white text-center font-semibold">ClassName</TableHead>
+						<TableHead className="text-center text-white font-semibold">Confidence</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>

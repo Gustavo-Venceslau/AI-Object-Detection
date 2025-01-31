@@ -9,11 +9,6 @@ import { useRef, useState } from 'react';
 import { useCanva } from '@/contexts/canva'
 import axios from 'axios';
 
-const style = {
-	borderRadius: '12px',
-	overflow: 'hidden'
-}
-
 type Box = {
 	height: number, 
 	left: number, 
@@ -30,7 +25,7 @@ export type Prediction = {
 export default function Home() {
 	const videoRef = useRef<HTMLVideoElement | null>(null);
 	const { canvas, canvasRef } = useCanva();
-	const [name, setName] = useState("vazio");
+	const [name, setName] = useState("Predictions:");
 
 	const extractFrames = (confidence: number, iou: number) => {
 		if(videoRef.current && canvas) {
@@ -71,7 +66,7 @@ export default function Home() {
 							const x = (800 - width) / 2
 							const y = (450 - height) / 2
 
-							setName(`${prediction.class_name},${top},${left},${width},${height} /n confidence${prediction.confidence}`)
+							setName(`predições: ${prediction.class_name},${top},${left},${width},${height} /n confidence${prediction.confidence}`)
 
 							contexto!.drawImage(
 								video, 
@@ -97,17 +92,25 @@ export default function Home() {
 	}
 
 	return (
-		<div className="w-full h-screen text-center flex flex-col items-center gap-16 py-16">
-			<h1 className='text-white text-4xl font-bold'>
+		<div className="w-full h-screen text-center flex flex-col items-center">
+			<h1 className='text-white text-4xl font-bold my-10'>
 				Welcome to AI Object Detection
 			</h1>
-			<div className='w-[800px] flex flex-col gap-4 shadow-lg'>
-				<Preview />
-				<h1 className='text-white text-xl'>{name}</h1>
-				<Video src={busVideo} width={800} height={450} style={style} ref={videoRef} />
-				<h2 className='text-white text-2xl font-semibold'>Settings</h2>
-				<SettingsBar detectFunction={extractFrames}/>
-				<ResultsTable />
+			<div className='flex flex-col gap-4 shadow-lg'>
+				<Preview predictionName={name}/>
+				<div className='flex flex-flex gap-4'>
+					<section className='w-full'>
+						<Video 
+							src={busVideo} 
+							width={800} 
+							height={450} 
+							ref={videoRef} 
+							className='rounded-t-lg rounded-tr-lg overflow-hidden'
+						/>
+						<SettingsBar detectFunction={extractFrames}/>
+					</section>
+					<ResultsTable />
+				</div>
 			</div>
 		</div>
 	);
