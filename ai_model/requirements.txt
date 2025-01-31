@@ -7,3 +7,4 @@ Pillow==9.3.0
 Requests==2.31.0
 Flask-Cors==5.0.0
 peewee==3.17.8
+psycopg2-binary==2.9.10

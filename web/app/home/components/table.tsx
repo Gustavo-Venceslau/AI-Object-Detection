@@ -19,7 +19,7 @@ export function ResultsTable() {
 				if(response.status !== 200) {
 					throw new Error("Erro ao listar predições")
 				}
-
+				console.log(response.data);
 				setPredictions(response.data)
 			})
 			.catch((error) => {

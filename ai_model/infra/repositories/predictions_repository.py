@@ -4,17 +4,18 @@ class PredictionsRepository:
 	def __init__(self):
 		pass
 
-	def save(self, prediction: Prediction):
+	def save(prediction):
 		try:
 			db.connect()
-			prediction.save()
+			print(prediction)
+			Prediction.create(class_name=prediction.class_name, confidence=prediction.confidence, box=prediction.box)
 		except Exception as e:
 			print(e)
 			return False
 		finally:
 			db.close()
 
-	def getLast10Predictions(self):
+	def getLast10Predictions():
 		try:
 			db.connect()
 
