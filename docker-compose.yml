@@ -5,3 +5,36 @@ services:
       dockerfile: Dockerfile
     ports: 
       - 5001:5000
+  database:
+    container_name: overview-database
+    image: bitnami/postgresql
+    user: root
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRESQL_PASSWORD=123
+      - POSTGRESQL_DATABASE=database
+    volumes:
+      - overview-database:/var/lib/postgres
+    networks:
+      - overview
+  pgadmin:
+    container_name: overview-pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - overview-pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    networks:
+      - overview
+    restart: unless-stopped
+networks:
+  overview:
+    driver: bridge
+volumes:
+  overview-database:
+  overview-pgadmin:
