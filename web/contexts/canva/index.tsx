@@ -17,7 +17,7 @@ export const CanvaProvider = ({ children }: { children: React.ReactNode }) => {
 	useEffect(() => {
 		if (canvasRef.current) {
 			const initCanvas = new Canvas(canvasRef.current, {
-				width: 800,
+				width: 1000,
 				height: 200
 			});
 

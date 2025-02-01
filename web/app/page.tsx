@@ -35,8 +35,6 @@ export default function Home() {
 				offscreenCanvas.width = 800;
     			offscreenCanvas.height = 450;
 
-				console.log(`w:${video.width}, h:${video.height}`)
-
 				if(canvasRef.current) {
 					const ctx = offscreenCanvas.getContext('2d');
 
@@ -62,8 +60,8 @@ export default function Home() {
 
 							contexto!.clearRect(0, 0, canvas.width, canvas.height);
 
-							const x = (800 - width) / 2
-							const y = (450 - height) / 2
+							const x = (canvas.width - width) / 2
+							const y = (canvas.height - height) / 2
 
 							setName(`class_name:${prediction.class_name} top:${top} left:${left} width:${width} height:${height} confidence:${prediction.confidence}`)
 
@@ -72,7 +70,7 @@ export default function Home() {
 								left, top, // pega a parte da imagem a ser mostrada
 								video.width, video.height, // tamanho do recorte da imagem
 								x, y, // posição da imagem no canvas
-								width, height // tamanho final da imagem
+								400 , 400// tamanho final da imagem
 							)
 						})
 					}
