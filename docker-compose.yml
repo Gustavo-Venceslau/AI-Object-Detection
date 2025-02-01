@@ -4,7 +4,21 @@ services:
       context: ./ai_model
       dockerfile: Dockerfile
     ports: 
-      - 5001:5000
+      - 5001:5001
+    networks:
+      - overview
+    depends_on:
+      - database
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - overview
+    depends_on:
+      - app
   database:
     container_name: overview-database
     image: bitnami/postgresql
@@ -15,7 +29,7 @@ services:
       - POSTGRESQL_PASSWORD=123
       - POSTGRESQL_DATABASE=database
     volumes:
-      - overview-database:/var/lib/postgres
+      - overview-database:/bitnami/postgresql
     networks:
       - overview
   pgadmin:
