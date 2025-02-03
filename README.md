@@ -101,7 +101,6 @@ This assignment should be delivered through GitHub. Please create a **private** 
 
 Once the hiring process is complete, you can make your work public (both repo and video).
 
-
 ## How to run (by galmv_)
 
 The entire application can be run just using `docker-compose`:
@@ -117,3 +116,5 @@ The entire application can be run just using `docker-compose`:
 
 1. select the parameters **Confidence** and **IoU**
 2. click in the button **Detect** and see the results
+
+Solution video link: https://youtu.be/IK83scTq_M8
