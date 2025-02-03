@@ -147,7 +147,7 @@ export default function Home() {
 						/>
 						<SettingsBar detectFunction={extractFrames}/>
 					</section>
-					<ResultsTable />
+					<ResultsTable name={name}/>
 				</div>
 			</div>
 		</div>

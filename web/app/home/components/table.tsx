@@ -10,7 +10,11 @@ import {
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-export function ResultsTable() {
+interface ResultsTableProps {
+	name: string
+}
+
+export function ResultsTable({ name }: ResultsTableProps) {
 	const [predictions, setPredictions] = useState<Prediction[]>([])
 
 	useEffect(() => {
@@ -25,7 +29,7 @@ export function ResultsTable() {
 			.catch((error) => {
 				console.error(error);
 			})
-	}, [])
+	}, [name])
 
 
 	return (

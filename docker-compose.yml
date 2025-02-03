@@ -9,6 +9,7 @@ services:
       - overview
     depends_on:
       - database
+    restart: always
   web:
     build:
       context: ./web
