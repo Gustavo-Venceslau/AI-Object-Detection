@@ -7,6 +7,7 @@ import { useRef, useState } from 'react';
 import { useCanva } from '@/contexts/canva'
 import axios from 'axios';
 import { Video } from './home/components/video';
+import { FabricImage } from 'fabric';
 
 type Box = {
 	height: number, 
@@ -53,25 +54,69 @@ export default function Home() {
 
 						const predictions: Prediction[] = response.data
 
-						const contexto = canvasRef.current!.getContext('2d');
-
 						predictions.map(prediction => {
 							const { top, left, width, height } = prediction.box
+							const cutCanvas = document.createElement('canvas');
 
-							contexto!.clearRect(0, 0, canvas.width, canvas.height);
+							cutCanvas.width = width;
+							cutCanvas.height = height;
 
-							const x = (canvas.width - width) / 2
-							const y = (canvas.height - height) / 2
+							const cutCtx = cutCanvas.getContext('2d');
 
-							setName(`class_name:${prediction.class_name} top:${top} left:${left} width:${width} height:${height} confidence:${prediction.confidence}`)
+							if(cutCtx) {
+								canvas.clear()
+								cutCtx.clearRect(0, 0, width, height)
 
-							contexto!.drawImage(
-								video, 
-								left, top, // pega a parte da imagem a ser mostrada
-								video.width, video.height, // tamanho do recorte da imagem
-								x, y, // posição da imagem no canvas
-								400 , 400// tamanho final da imagem
-							)
+								console.log(cutCanvas.width, cutCanvas.height)
+
+								const scaleX = video.videoWidth / canvas.width;
+								const scaleY = video.videoHeight / canvas.height;
+
+								const scaledLeft = left * scaleX;
+								const scaledTop = top * scaleY;
+								const scaledWidth = width * scaleX;
+								const scaledHeight = height * scaleY;
+
+								cutCtx.drawImage(
+									video,
+									scaledLeft, scaledTop,
+									scaledWidth, scaledHeight,
+									0, 0,
+									width, height 
+								)
+	
+								const cutImageURL = cutCanvas.toDataURL('image/jpeg')
+	
+								const image = document.createElement('img')
+
+								Object.assign(image, {
+									src: cutImageURL,
+									alt: prediction.class_name,
+									width,
+									height
+								})
+								
+								image.onload = () => {
+									document.body.appendChild(image)
+								}
+
+								const x = (canvas.width - width) / 2
+								const y = (canvas.height - height) / 2
+	
+								const fabricImage = new FabricImage(image, {
+									top: y,
+									left: x,
+									width,
+									height
+								})
+	
+								setName(
+									`class_name:${prediction.class_name} top:${top} left:${left} width:${width} height:${height} confidence:${prediction.confidence}`
+								)
+	
+								canvas.add(fabricImage)
+								canvas.requestRenderAll()
+							}
 						})
 					}
 
@@ -89,7 +134,7 @@ export default function Home() {
 	}
 
 	return (
-		<div className="w-full h-screen text-center flex flex-col items-center">
+		<div className="w-full h-screen text-center flex flex-col items-center" id="home">
 			<div className='w-full h-10 bg-[#2A2A2A] mb-10 flex items-center justify-center'>
 				<h1 className='text-white text-xl font-bold'>AI Object Detection</h1>
 			</div>

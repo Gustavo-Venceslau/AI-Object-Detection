@@ -1,6 +1,6 @@
 from peewee import *
 
-db = PostgresqlDatabase('database', user='postgres', password='123', host='localhost', port=5433)
+db = PostgresqlDatabase('database', user='postgres', password='123', host='overview-database', port=5432)
 
 class Prediction(Model):
 	box = CharField()

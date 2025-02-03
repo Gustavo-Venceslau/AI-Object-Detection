@@ -120,8 +120,8 @@ def detect():
 		predictions = model(original_img, confidence, iou)
 		detections = [p.to_dict() for p in predictions]
 
-		# for p in predictions:
-		# 	PredictionsRepository.save(p)
+		for p in predictions:
+			PredictionsRepository.save(p)
 
 		os.remove(image_path)
 
