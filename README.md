@@ -120,4 +120,4 @@ The entire application can be run just using `docker-compose`:
 
 Solution video link: https://youtu.be/IK83scTq_M8
 
-**Note**: I forgot in the create the load_model checkbox but after the video I create it and it works :D
+**Note**: I forgot in the create the load_model checkbox but after the video I made it and it works :D
