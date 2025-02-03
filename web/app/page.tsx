@@ -27,8 +27,14 @@ export default function Home() {
 	const { canvas, canvasRef } = useCanva();
 	const [name, setName] = useState("Predictions:");
 
-	const extractFrames = (confidence: number, iou: number) => {
-		if(videoRef.current && canvas) {
+	const extractFrames = async (confidence: number, iou: number, model_name: string) => {
+		const response = await axios.post("http://localhost:5001/load_model", {
+			model_name
+		});
+
+		const model_loaded = response.data;
+
+		if(videoRef.current && canvas && model_loaded) {
 			const video = videoRef.current;
 
 			video.onseeked = async () => {
