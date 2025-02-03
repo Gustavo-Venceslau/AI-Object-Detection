@@ -100,3 +100,20 @@ Each inference result should be saved to a Postgres database on the backend. Fee
 This assignment should be delivered through GitHub. Please create a **private** repository and add Adriano (@opassos) and Xiao (@xyk2) as collaborators. You should also record a short (2 to 5 minutes) video showcasing your solution. You can upload the video to any streaming service, but we recommend making an **unlisted** video on YouTube. 
 
 Once the hiring process is complete, you can make your work public (both repo and video).
+
+
+## How to run (by galmv_)
+
+The entire application can be run just using `docker-compose`:
+
+### Installation Steps
+
+1. `git clone git@github.com:Gustavo-Venceslau/AI-Object-Detection.git`
+2. `cd AI-Object-Detection`
+3. `docker-compose up -d`
+4. acess http://localhost:3000
+
+### Testing Application
+
+1. select the parameters **Confidence** and **IoU**
+2. click in the button **Detect** and see the results
