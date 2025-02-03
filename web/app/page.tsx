@@ -95,10 +95,6 @@ export default function Home() {
 									width,
 									height
 								})
-								
-								image.onload = () => {
-									document.body.appendChild(image)
-								}
 
 								const x = (canvas.width - width) / 2
 								const y = (canvas.height - height) / 2
