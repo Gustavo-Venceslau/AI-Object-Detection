@@ -114,7 +114,10 @@ The entire application can be run just using `docker-compose`:
 
 ### Testing Application
 
-1. select the parameters **Confidence** and **IoU**
-2. click in the button **Detect** and see the results
+1. select the parameters **Confidence** and **IoU**;
+2. select the model in the checkboxs;
+3. click in the button **Detect** and see the results.
 
 Solution video link: https://youtu.be/IK83scTq_M8
+
+**Note**: I forgot in the create the load_model checkbox but after the video I create it and it works :D
